@@ -1,44 +1,58 @@
+const { Console } = require('console')
 const express = require('express')
 const app = express()
-const bodyParser = require('body-parser')
+const bodypaser = require('body-parser')
+const mongoose = require('mongoose')
 
-app.use(bodyParser.json({
-    extended: true,
-    limit: '20mb'
+mongoose.connect('mongodb://localhost:27017/latihan',{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  }).then(()=>{
+      console.log('connected')
+  }).catch((e)=>{
+      console.log(e)
+      console.log('unconnected')
+  })
+  
+
+
+app.use(bodypaser.json({
+    extend : true,
+    limit : '20mb'
+
 }))
 
-app.use(bodyParser.urlencoded({
-    extended: true,
-    limit: '20mb'
+app.use(bodypaser.urlencoded({
+    extend : true,
+    limit : '20mb'
+
 }))
- 
-app.get('/', function (req, res) {
-  res.send('Hello World')
+
+app.get('/',(req, res)=>{
+    res.send('hello word')
 })
 
-// app.get('/profile/:username/:id', (req, res) => {
-//     console.log(req.params)
-//     res.send('Username Anda' + req.params.username)
-// })
-
-app.get('/daerah/:namaDaerah/:idDaerah', (req, res) => {
+app.get('/profile/:username/:id',(req, res)=>{
     console.log(req.params)
-    const namaDaerah = req.params.namaDaerah
-    const idDaerah = req.params.idDaerah
-    res.send('Nama Daerah Anda ' + namaDaerah + ' Id Daerah ' + idDaerah)
+    res.send('username ='+ req.params.username)
 })
+//reg parms
+app.get('/daerah/:daerah',(req, res)=>{
+    console.log(req.params)
+    //res.send('daerah ='+ req.params.daerah)
+})
+//req body
+//app.post('/register',(req, res) =>{
+  //  console.log(req.body)
+    //req.json(req.body)
+//})
 
-app.post('/register', (req, res) => {
-    console.log(req.body)
-    res.json(req.body)
-})
- 
-app.listen(3000, () =>{
+
+app.use('/user/', require ('./routes/User'))
+
+
+app.listen(3000, () => {
     console.log('server started')
 })
-
-// instal npm init
-// install npm i express
-// install nodemon
-// download postman
-// 
